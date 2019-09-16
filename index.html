@@ -4,13 +4,25 @@ const ӧ = "ӧö";
 
 function toSaar(text){
   let out = "";
+  let upper = 0;
   for (var i = 0; i < text.length; i++) {
-    if (est_alp.indexOf(text.charAt(i)) !== -1){
-        let bin = est_alp.indexOf(text.charAt(i)).toString(2);
-        if (est_alp.indexOf(text.charAt(i+1)) !== -1 && i+1 < text.length){
+    if (text.charAt(i).toLowerCase() !== text.charAt(i)){
+        upper = 1;
+        if (text.charAt(i+1).toLowerCase() !== text.charAt(i+1))
+            upper = 2;
+    }else{
+        upper = 0;
+    }
+    if (est_alp.indexOf(text.charAt(i).toLowerCase()) !== -1){
+        let bin = est_alp.indexOf(text.charAt(i).toLowerCase()).toString(2);
+        if (est_alp.indexOf(text.charAt(i+1).toLowerCase()) !== -1 && i+1 < text.length){
             bin = bin.padStart(5,"0");
         }
         bin = bin.replace(/0/g, "ӧ").replace(/1/g, "ö");
+        if (upper == 1)
+            bin = bin.substring(0,1).toUpperCase() + bin.substring(1);
+        if (upper == 2)
+            bin = bin.toUpperCase();
         out += bin;
     }else{
         out += text.charAt(i);
@@ -22,20 +34,33 @@ function toSaar(text){
 function toEst(text){
   let out = "";
   let binbuf = "";
+  let upper = false;
   text += "x";
   for (var i = 0; i < text.length; i++) {
-    if (ӧ.indexOf(text.charAt(i)) !== -1){
-        binbuf += ӧ.indexOf(text.charAt(i));
+    if (ӧ.indexOf(text.charAt(i).toLowerCase()) !== -1){
+        if (text.charAt(i).substring(0,1).toLowerCase() !== text.charAt(i).substring(0,1))
+            upper = true;
+        binbuf += ӧ.indexOf(text.charAt(i).toLowerCase());
         if (binbuf.length > 4){
             let bindec = parseInt(binbuf,2);
-            out += est_alp.substring(bindec,bindec+1);
+            if (upper){
+                out += est_alp.substring(bindec,bindec+1).toUpperCase();
+            }else{
+                out += est_alp.substring(bindec,bindec+1);
+            }
             binbuf = "";
+            upper = false;
         }
     }else{
         if (binbuf !== ""){
             let bindec = parseInt(binbuf,2);
-            out += est_alp.substring(bindec,bindec+1);
+            if (upper){
+                out += est_alp.substring(bindec,bindec+1).toUpperCase();
+            }else{
+                out += est_alp.substring(bindec,bindec+1);
+            }
             binbuf = "";
+            upper = false;
         }
         out += text.charAt(i);
     }
