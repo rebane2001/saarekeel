@@ -34,8 +34,9 @@ body {
   <input type="button" value="Tölgi eesti keelde" onclick="translateText(false)"> <input type="button" value="Tölgi saare keelde" onclick="translateText(true)">
 </div>
 <script>
-const est_alp = "abcdefghijklmnopqrsšzžtuvwõäöüxӧ";
+//muuda seda rida, et enda soovitud tähemärke kasutada
 const ӧ = "ӧö";
+const est_alp = "abcdefghijklmnopqrsšzžtuvwõä" + ӧ[1] + "üx" + ӧ[0];
 
 function translateText(saar){
     if (saar)
@@ -60,7 +61,7 @@ function toSaar(text){
         if (est_alp.indexOf(text.charAt(i+1).toLowerCase()) !== -1 && i+1 < text.length){
             bin = bin.padStart(5,"0");
         }
-        bin = bin.replace(/0/g, "ӧ").replace(/1/g, "ö");
+        bin = bin.replace(/0/g, ӧ[0]).replace(/1/g, ӧ[1]);
         if (upper == 1)
             bin = bin.substring(0,1).toUpperCase() + bin.substring(1);
         if (upper == 2)
